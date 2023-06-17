@@ -8,6 +8,16 @@ function App() {
   const [timeRemaining, setTimeRemaining] = useState(time)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
 
+  const textAreaRef = useRef(null)
+
+  function startGame(){
+    setIsTimeRunning(true)
+    setTimeRemaining(time)
+    setText('')
+    textAreaRef.current.disabled = false
+    textAreaRef.current.focus()
+  }
+
   function handleChange(e){
     setText(e.target.value)
   }
@@ -16,16 +26,32 @@ function App() {
     return text.split(' ').filter(word => word !== '').length
   }
 
+  useEffect(() => {
+    if(timeRemaining > 0 && isTimeRunning){
+      setTimeout(() => {
+        setTimeRemaining(prevState => prevState-1)
+      }, 1000)
+    } else if (timeRemaining === 0) {
+      setIsTimeRunning(false)
+    }
+  }, [timeRemaining, isTimeRunning])
+
   return (
     <main>
       <h1>How fast can you type?</h1>
       <textarea
+        ref={textAreaRef}
+        disabled={!isTimeRunning}
         onChange={handleChange}
         value={text}
       ></textarea>
-      <h2>Time remaining: ???</h2>
-      <button onClick={() => countWords(text)}>Start</button>
-      <h2>Words counted: ???</h2>
+      <h2>Time remaining: {timeRemaining}</h2>
+      <button 
+        disabled={isTimeRunning}
+        onClick={startGame}>
+        Start
+      </button>
+     { timeRemaining === 0 && <h2>Words counted: {countWords(text)}</h2>}
     </main>
   )
 }
