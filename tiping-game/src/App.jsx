@@ -2,16 +2,19 @@ import { useState, useEffect, useRef } from 'react'
 
 function App() {
 
-const [text, setText] = useState('')
+  const time = 5
 
-function handleChange(e){
-  setText(e.target.value)
-}
+  const [text, setText] = useState('')
+  const [timeRemaining, setTimeRemaining] = useState(time)
+  const [isTimeRunning, setIsTimeRunning] = useState(false)
 
-function countWords(text){
-  const wordsArray = text.split(' ').filter(word => word !== '')
-  console.log(wordsArray)
-}
+  function handleChange(e){
+    setText(e.target.value)
+  }
+
+  function countWords(text){
+    return text.split(' ').filter(word => word !== '').length
+  }
 
   return (
     <main>
